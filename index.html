@@ -22,18 +22,33 @@
         .step.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .form-group { background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        label { display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #fff; line-height: 1.4; }
+        label.question-title { display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: #fff; line-height: 1.4; }
         .sub-label { display: block; font-size: 12px; color: #a0a0a0; margin-bottom: 12px; }
-        input[type="text"], select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: rgba(255, 255, 255, 0.1); color: #fff; font-size: 14px; box-sizing: border-box; font-family: 'Pretendard', sans-serif; }
+        input[type="text"], textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: rgba(255, 255, 255, 0.1); color: #fff; font-size: 14px; box-sizing: border-box; font-family: 'Pretendard', sans-serif; }
         textarea { resize: vertical; min-height: 80px; }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: #4facfe; }
+        input:focus, textarea:focus { outline: none; border-color: #4facfe; }
         
-        /* Select 박스 화살표 디자인 보정 */
-        select { appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; }
-        select option { background: #1e1e2f; color: #fff; }
+        /* 버튼형 객관식(Radio) UI 스타일 */
+        .radio-group { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .radio-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+        .radio-input { display: none; }
+        .radio-label {
+            display: flex; align-items: center; justify-content: center; padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid #333; border-radius: 8px;
+            cursor: pointer; transition: all 0.2s; font-size: 14px; color: #d0d0d0; text-align: center;
+        }
+        .radio-label:hover { background: rgba(255, 255, 255, 0.1); }
+        .radio-input:checked + .radio-label {
+            background: rgba(79, 172, 254, 0.15); border-color: #4facfe; color: #4facfe; font-weight: bold;
+        }
 
+        /* 버튼 디자인 */
         .submit-btn { width: 100%; padding: 16px; border: none; border-radius: 8px; background: #4facfe; color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; margin-top: 10px; }
         .submit-btn:hover { background: #328dd6; }
+        
+        /* 🔥 새로 추가된 뒤로 가기 버튼 디자인 🔥 */
+        .back-btn { width: 100%; padding: 14px; border: 1px solid #555; border-radius: 8px; background: transparent; color: #aaa; font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.3s; margin-top: 10px; }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
         
         .blur-box { background: rgba(255, 255, 255, 0.9); color: #333; padding: 20px; border-radius: 12px; margin-bottom: 20px; position: relative; overflow: hidden; text-align: left; }
         .blur-text { filter: blur(6px); user-select: none; margin-bottom: 15px; line-height: 1.6; font-size: 14px; }
@@ -54,88 +69,84 @@
     <div id="step1" class="step active">
         
         <div class="form-group">
-            <label>0. 너를 조금 더 잘 이해하고 싶어. 학년이 어떻게 돼?</label>
-            <select id="userGrade" required>
-                <option value="" disabled selected>선택해 줘</option>
-                <option value="중학교 1학년">중학교 1학년</option>
-                <option value="중학교 2학년">중학교 2학년</option>
-                <option value="중학교 3학년">중학교 3학년</option>
-                <option value="고등학교 1학년">고등학교 1학년</option>
-                <option value="고등학교 2학년">고등학교 2학년</option>
-                <option value="고등학교 3학년">고등학교 3학년</option>
-                <option value="기타(알려주고 싶지 않음)">기타(알려주고 싶지 않음)</option>
-            </select>
+            <label class="question-title">0. 너를 조금 더 잘 이해하고 싶어. 학년이 어떻게 돼?</label>
+            <div class="radio-grid-2">
+                <div><input type="radio" name="userGrade" id="g1" value="중학교 1학년" class="radio-input"><label for="g1" class="radio-label">중학교 1학년</label></div>
+                <div><input type="radio" name="userGrade" id="g2" value="중학교 2학년" class="radio-input"><label for="g2" class="radio-label">중학교 2학년</label></div>
+                <div><input type="radio" name="userGrade" id="g3" value="중학교 3학년" class="radio-input"><label for="g3" class="radio-label">중학교 3학년</label></div>
+                <div><input type="radio" name="userGrade" id="g4" value="고등학교 1학년" class="radio-input"><label for="g4" class="radio-label">고등학교 1학년</label></div>
+                <div><input type="radio" name="userGrade" id="g5" value="고등학교 2학년" class="radio-input"><label for="g5" class="radio-label">고등학교 2학년</label></div>
+                <div><input type="radio" name="userGrade" id="g6" value="고등학교 3학년" class="radio-input"><label for="g6" class="radio-label">고등학교 3학년</label></div>
+            </div>
+            <div class="radio-group" style="margin-top: 8px;">
+                <input type="radio" name="userGrade" id="g7" value="기타(알려주고 싶지 않음)" class="radio-input"><label for="g7" class="radio-label">기타(알려주고 싶지 않음)</label>
+            </div>
         </div>
 
         <div class="form-group">
-            <label>1. 가장 좋아하거나 자신 있는 과목은 뭐야?</label>
+            <label class="question-title">1. 가장 좋아하거나 자신 있는 과목은 뭐야?</label>
             <span class="sub-label">반대로 절대 피하고 싶은 과목도 함께 적어주면 훨씬 정확해!</span>
             <input type="text" id="userSubject" placeholder="예: 국어나 역사는 좋은데, 수학은 피하고 싶어" required>
         </div>
 
         <div class="form-group">
-            <label>2. 평소 시간 가는 줄 모르고 푹 빠져있는 관심사가 있다면?</label>
+            <label class="question-title">2. 평소 시간 가는 줄 모르고 푹 빠져있는 관심사가 있다면?</label>
             <input type="text" id="userInterest" placeholder="예: 옷 코디하기, 범죄 다큐멘터리 보기 등" required>
         </div>
 
         <div class="form-group">
-            <label>3. 다음 중 너에게 더 관심이 가는 방향은?</label>
-            <select id="userDirection" required>
-                <option value="" disabled selected>선택해 줘</option>
-                <option value="사람 중심 (심리, 교육, 복지 등)">사람 중심</option>
-                <option value="기술 중심 (IT, 공학, 연구 등)">기술 중심</option>
-                <option value="콘텐츠 중심 (미디어, 예술, 디자인 등)">콘텐츠 중심</option>
-                <option value="비즈니스 중심 (경영, 마케팅, 창업 등)">비즈니스 중심</option>
-                <option value="아직 모름">아직 모름</option>
-            </select>
+            <label class="question-title">3. 다음 중 너에게 더 관심이 가는 방향은?</label>
+            <div class="radio-group">
+                <div><input type="radio" name="userDirection" id="d1" value="사람 중심 (심리, 교육, 복지 등)" class="radio-input"><label for="d1" class="radio-label">사람 중심 (심리, 교육, 복지 등)</label></div>
+                <div><input type="radio" name="userDirection" id="d2" value="기술 중심 (IT, 공학, 연구 등)" class="radio-input"><label for="d2" class="radio-label">기술 중심 (IT, 공학, 연구 등)</label></div>
+                <div><input type="radio" name="userDirection" id="d3" value="콘텐츠 중심 (미디어, 예술, 디자인 등)" class="radio-input"><label for="d3" class="radio-label">콘텐츠 중심 (미디어, 예술, 디자인 등)</label></div>
+                <div><input type="radio" name="userDirection" id="d4" value="비즈니스 중심 (경영, 마케팅, 창업 등)" class="radio-input"><label for="d4" class="radio-label">비즈니스 중심 (경영, 마케팅, 창업 등)</label></div>
+                <div><input type="radio" name="userDirection" id="d5" value="아직 모름" class="radio-input"><label for="d5" class="radio-label">아직 모름</label></div>
+            </div>
         </div>
 
         <div class="form-group">
-            <label>4. "시간 가는 줄 몰랐던 경험"은 주로 어떤 유형이야?</label>
-            <select id="userTimeType" required>
-                <option value="" disabled selected>선택해 줘</option>
-                <option value="글쓰기 (이야기 창작, 에세이 등)">글쓰기</option>
-                <option value="말하기 (발표, 토론, 설득 등)">말하기</option>
-                <option value="만들기 (코딩, 공예, 영상 편집 등)">만들기</option>
-                <option value="분석하기 (데이터, 원인 파악, 실험 등)">분석하기</option>
-                <option value="기획하기 (행사, 아이디어 스케치 등)">기획하기</option>
-            </select>
+            <label class="question-title">4. "시간 가는 줄 몰랐던 경험"은 주로 어떤 유형이야?</label>
+            <div class="radio-group">
+                <div><input type="radio" name="userTimeType" id="t1" value="글쓰기 (이야기 창작, 에세이 등)" class="radio-input"><label for="t1" class="radio-label">글쓰기 (이야기 창작, 에세이 등)</label></div>
+                <div><input type="radio" name="userTimeType" id="t2" value="말하기 (발표, 토론, 설득 등)" class="radio-input"><label for="t2" class="radio-label">말하기 (발표, 토론, 설득 등)</label></div>
+                <div><input type="radio" name="userTimeType" id="t3" value="만들기 (코딩, 공예, 영상 편집 등)" class="radio-input"><label for="t3" class="radio-label">만들기 (코딩, 공예, 영상 편집 등)</label></div>
+                <div><input type="radio" name="userTimeType" id="t4" value="분석하기 (데이터, 원인 파악, 실험 등)" class="radio-input"><label for="t4" class="radio-label">분석하기 (데이터, 원인 파악, 실험 등)</label></div>
+                <div><input type="radio" name="userTimeType" id="t5" value="기획하기 (행사, 아이디어 스케치 등)" class="radio-input"><label for="t5" class="radio-label">기획하기 (행사, 아이디어 스케치 등)</label></div>
+            </div>
         </div>
 
         <div class="form-group">
-            <label>5. 무언가를 할 때, 결과와 과정 중 어느 쪽에 더 가치를 둬?</label>
-            <select id="userProcessResult" required>
-                <option value="" disabled selected>선택해 줘</option>
-                <option value="결과 (눈에 보이는 성과가 중요해)">결과</option>
-                <option value="과정 (배우고 성장하는 경험이 중요해)">과정</option>
-                <option value="상황에 따라 다름">상황에 따라 다름</option>
-            </select>
+            <label class="question-title">5. 무언가를 할 때, 결과와 과정 중 어느 쪽에 더 가치를 둬?</label>
+            <div class="radio-group">
+                <div><input type="radio" name="userProcessResult" id="p1" value="결과 (눈에 보이는 성과가 중요해)" class="radio-input"><label for="p1" class="radio-label">결과 (눈에 보이는 성과가 중요해)</label></div>
+                <div><input type="radio" name="userProcessResult" id="p2" value="과정 (배우고 성장하는 경험이 중요해)" class="radio-input"><label for="p2" class="radio-label">과정 (배우고 성장하는 경험이 중요해)</label></div>
+                <div><input type="radio" name="userProcessResult" id="p3" value="상황에 따라 다름" class="radio-input"><label for="p3" class="radio-label">상황에 따라 다름</label></div>
+            </div>
         </div>
 
         <div class="form-group">
-            <label>6. 너의 학생부(생기부)에서 가장 강화하고 싶은 요소는?</label>
-            <select id="userRecordElement" required>
-                <option value="" disabled selected>선택해 줘</option>
-                <option value="전공 적합성">전공 적합성</option>
-                <option value="활동 다양성">활동 다양성</option>
-                <option value="스토리 연결성">스토리 연결성</option>
-                <option value="성취도 (결과물)">성취도</option>
-            </select>
+            <label class="question-title">6. 너의 학생부(생기부)에서 가장 강화하고 싶은 요소는?</label>
+            <div class="radio-group">
+                <div><input type="radio" name="userRecordElement" id="r1" value="전공 적합성" class="radio-input"><label for="r1" class="radio-label">전공 적합성</label></div>
+                <div><input type="radio" name="userRecordElement" id="r2" value="활동 다양성" class="radio-input"><label for="r2" class="radio-label">활동 다양성</label></div>
+                <div><input type="radio" name="userRecordElement" id="r3" value="스토리 연결성" class="radio-input"><label for="r3" class="radio-label">스토리 연결성</label></div>
+                <div><input type="radio" name="userRecordElement" id="r4" value="성취도 (결과물)" class="radio-input"><label for="r4" class="radio-label">성취도 (결과물)</label></div>
+            </div>
         </div>
 
         <div class="form-group">
-            <label>7. 아래 중 가장 끌리는 세특 활동은?</label>
-            <select id="userActivity" required>
-                <option value="" disabled selected>선택해 줘</option>
-                <option value="데이터로 문제 분석하기">데이터로 문제 분석하기</option>
-                <option value="사람 인터뷰해서 인사이트 도출">사람 인터뷰해서 인사이트 도출</option>
-                <option value="콘텐츠 제작 (영상/글)">콘텐츠 제작 (영상/글)</option>
-                <option value="프로젝트 기획 및 실행">프로젝트 기획 및 실행</option>
-            </select>
+            <label class="question-title">7. 아래 중 가장 끌리는 세특 활동은?</label>
+            <div class="radio-group">
+                <div><input type="radio" name="userActivity" id="a1" value="데이터로 문제 분석하기" class="radio-input"><label for="a1" class="radio-label">데이터로 문제 분석하기</label></div>
+                <div><input type="radio" name="userActivity" id="a2" value="사람 인터뷰해서 인사이트 도출" class="radio-input"><label for="a2" class="radio-label">사람 인터뷰해서 인사이트 도출</label></div>
+                <div><input type="radio" name="userActivity" id="a3" value="콘텐츠 제작 (영상/글)" class="radio-input"><label for="a3" class="radio-label">콘텐츠 제작 (영상/글)</label></div>
+                <div><input type="radio" name="userActivity" id="a4" value="프로젝트 기획 및 실행" class="radio-input"><label for="a4" class="radio-label">프로젝트 기획 및 실행</label></div>
+            </div>
         </div>
 
         <div class="form-group">
-            <label>8. 진로나 전공을 고민할 때, 널 제일 가로막는 '안개(고민)'는 뭐야?</label>
+            <label class="question-title">8. 진로나 전공을 고민할 때, 널 제일 가로막는 '안개(고민)'는 뭐야?</label>
             <textarea id="userProblem" placeholder="예: 생기부에 쓸 내용이 막막해, 관심 분야가 너무 많아..." required></textarea>
         </div>
 
@@ -145,7 +156,7 @@
     <div id="step2" class="step" style="text-align: center;">
         <div id="loadingSection">
             <div class="loader"></div>
-            <p>작성해준 9가지 데이터를 바탕으로<br>SKY 멘토들이 전공 및 세특을 매칭 중이야...<br><span style="font-size: 12px; color: #a0a0a0;">(약 4초 소요)</span></p>
+            <p>작성해준 데이터를 바탕으로<br>SKY 멘토들이 전공 및 세특을 매칭 중이야...<br><span style="font-size: 12px; color: #a0a0a0;">(약 4초 소요)</span></p>
         </div>
         
         <div id="fakeDoorSection" style="display: none; text-align: left;">
@@ -167,7 +178,10 @@
                 <label style="color: #ffe812;">🎁 현재 베타 테스트 기간 전면 무료!</label>
                 <span class="sub-label">분석된 리포트와 세특 프로젝트를 받아볼 연락처를 남겨줘.<br>SKY 멘토 연구팀이 직접 꼼꼼하게 정리해서 보내줄게.</span>
                 <input type="text" id="userContact" placeholder="이메일 주소 또는 전화번호 입력" style="margin-top: 10px;" required>
+                
                 <button class="submit-btn" onclick="submitFinalData()">무료로 리포트 및 세특 미션 받기</button>
+                
+                <button class="back-btn" onclick="goBackToStep1()">이전 단계로 돌아가서 답변 수정하기</button>
             </div>
         </div>
     </div>
@@ -184,9 +198,8 @@
 
 <script>
     // 👇👇 반드시 아래 쌍따옴표 안에 Formspree에서 받은 URL을 넣어주세요! 👇👇
-    const FORMSPREE_URL = "https://formspree.io/f/mjgpweoz";
+    const FORMSPREE_URL = "https://formspree.io/f/YOUR_FORMSPREE_URL_HERE";
 
-    // 백그라운드에서 Formspree로 데이터를 쏘는 함수
     function sendTrackingData(stepName, extraData = {}) {
         const payload = {
             "현재_도달_단계": stepName,
@@ -202,22 +215,30 @@
     }
 
     function goToStep2() {
-        const grade = document.getElementById('userGrade').value;
-        const subject = document.getElementById('userSubject').value;
-        const interest = document.getElementById('userInterest').value;
-        const direction = document.getElementById('userDirection').value;
-        const timeType = document.getElementById('userTimeType').value;
-        const processResult = document.getElementById('userProcessResult').value;
-        const recordElement = document.getElementById('userRecordElement').value;
-        const activity = document.getElementById('userActivity').value;
-        const problem = document.getElementById('userProblem').value;
+        const gradeNode = document.querySelector('input[name="userGrade"]:checked');
+        const directionNode = document.querySelector('input[name="userDirection"]:checked');
+        const timeTypeNode = document.querySelector('input[name="userTimeType"]:checked');
+        const processResultNode = document.querySelector('input[name="userProcessResult"]:checked');
+        const recordElementNode = document.querySelector('input[name="userRecordElement"]:checked');
+        const activityNode = document.querySelector('input[name="userActivity"]:checked');
         
-        if (!grade || !subject || !interest || !direction || !timeType || !processResult || !recordElement || !activity || !problem) {
-            alert('모든 문항을 선택하고 입력해야 SKY 멘토들의 정확한 분석이 가능해!');
+        const subject = document.getElementById('userSubject').value.trim();
+        const interest = document.getElementById('userInterest').value.trim();
+        const problem = document.getElementById('userProblem').value.trim();
+        
+        if (!gradeNode || !directionNode || !timeTypeNode || !processResultNode || !recordElementNode || !activityNode || !subject || !interest || !problem) {
+            alert('모든 문항을 빠짐없이 선택하고 입력해야 정확한 분석이 가능해!');
             return;
         }
 
-        // [데이터 수집 1] 매칭 시작 버튼 클릭 (연락처 입력 전 이탈자 파악용)
+        const grade = gradeNode.value;
+        const direction = directionNode.value;
+        const timeType = timeTypeNode.value;
+        const processResult = processResultNode.value;
+        const recordElement = recordElementNode.value;
+        const activity = activityNode.value;
+
+        // 매칭 시작 트래킹
         sendTrackingData("1단계_분석시작_클릭(연락처제출전)", {
             "학년": grade,
             "과목_선호도": subject,
@@ -233,31 +254,42 @@
         document.getElementById('step1').classList.remove('active');
         document.getElementById('step2').classList.add('active');
 
-        // 문항이 많아졌으므로 분석하는 듯한 느낌을 주기 위해 4초 로딩
+        // 4초 후 결과창 노출
         setTimeout(() => {
             document.getElementById('loadingSection').style.display = 'none';
             document.getElementById('fakeDoorSection').style.display = 'block';
         }, 4000);
     }
 
+    // 🔥 뒤로 가기 함수 추가 🔥
+    function goBackToStep1() {
+        // Step 2 숨기고 Step 1 보여주기
+        document.getElementById('step2').classList.remove('active');
+        document.getElementById('step1').classList.add('active');
+        
+        // 다시 Step 2로 왔을 때 로딩화면부터 보이도록 초기화
+        document.getElementById('loadingSection').style.display = 'block';
+        document.getElementById('fakeDoorSection').style.display = 'none';
+    }
+
     function submitFinalData() {
-        const contact = document.getElementById('userContact').value;
+        const contact = document.getElementById('userContact').value.trim();
         if (!contact) {
             alert('리포트를 받을 이메일이나 전화번호를 꼭 입력해 줘!');
             return;
         }
 
-        const grade = document.getElementById('userGrade').value;
+        const grade = document.querySelector('input[name="userGrade"]:checked').value;
         const subject = document.getElementById('userSubject').value;
         const interest = document.getElementById('userInterest').value;
-        const direction = document.getElementById('userDirection').value;
-        const timeType = document.getElementById('userTimeType').value;
-        const processResult = document.getElementById('userProcessResult').value;
-        const recordElement = document.getElementById('userRecordElement').value;
-        const activity = document.getElementById('userActivity').value;
+        const direction = document.querySelector('input[name="userDirection"]:checked').value;
+        const timeType = document.querySelector('input[name="userTimeType"]:checked').value;
+        const processResult = document.querySelector('input[name="userProcessResult"]:checked').value;
+        const recordElement = document.querySelector('input[name="userRecordElement"]:checked').value;
+        const activity = document.querySelector('input[name="userActivity"]:checked').value;
         const problem = document.getElementById('userProblem').value;
 
-        // [데이터 수집 2] 연락처 제출 최종 완료
+        // 최종 완료 트래킹
         sendTrackingData("2단계_최종완료(연락처제출됨)", {
             "학년": grade,
             "과목_선호도": subject,
