@@ -27,12 +27,26 @@
         label.question-title { display: block; font-size: 16px; font-weight: 600; margin-bottom: 14px; color: #fff; line-height: 1.4; word-break: keep-all; }
         .sub-label { display: block; font-size: 13px; color: #a0a0a0; margin-bottom: 14px; }
         
-        /* 텍스트 입력창 디자인 */
-        input[type="text"], textarea { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #444; background: rgba(0, 0, 0, 0.2); color: #fff; font-size: 15px; box-sizing: border-box; font-family: 'Pretendard', sans-serif; transition: border 0.3s; }
+        /* 🔥 텍스트 입력창 & 드롭다운(Select) 통합 디자인 🔥 */
+        input[type="text"], textarea, select { 
+            width: 100%; padding: 14px 16px; border-radius: 10px; border: 1px solid #444; 
+            background: rgba(0, 0, 0, 0.2); color: #fff; font-size: 15px; 
+            box-sizing: border-box; font-family: 'Pretendard', sans-serif; transition: border 0.3s; 
+        }
         textarea { resize: vertical; min-height: 80px; }
-        input:focus, textarea:focus { outline: none; border-color: #4facfe; background: rgba(79, 172, 254, 0.05); }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #4facfe; background: rgba(79, 172, 254, 0.05); }
         
-        /* 🔥 새로워진 리스트형 라디오(체크) 버튼 UI 🔥 */
+        /* 드롭다운 화살표 및 세부 스타일링 */
+        select { 
+            appearance: none; -webkit-appearance: none; -moz-appearance: none; 
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a0a0a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); 
+            background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2em; 
+            cursor: pointer; 
+        }
+        select:invalid { color: #a0a0a0; } /* 선택 전 기본 문구는 회색으로 */
+        select option { background: #1e1e2f; color: #fff; padding: 10px; }
+        
+        /* 리스트형 라디오(체크) 버튼 UI */
         .radio-group { display: flex; flex-direction: column; gap: 10px; }
         .radio-input { display: none; }
         .radio-label {
@@ -46,29 +60,18 @@
         
         /* 동그란 라디오 아이콘 만들기 */
         .radio-label::before {
-            content: '';
-            display: inline-block;
-            min-width: 20px; width: 20px; height: 20px;
-            border-radius: 50%;
-            border: 2px solid #777;
-            margin-right: 14px;
-            background: transparent;
-            box-sizing: border-box;
-            transition: all 0.2s ease;
+            content: ''; display: inline-block; min-width: 20px; width: 20px; height: 20px;
+            border-radius: 50%; border: 2px solid #777; margin-right: 14px;
+            background: transparent; box-sizing: border-box; transition: all 0.2s ease;
         }
         
-        /* 마우스 올렸을 때 효과 */
         .radio-label:hover { background: rgba(255, 255, 255, 0.1); }
         
-        /* 선택되었을 때 효과 (테두리와 색상 변경, 아이콘 안에 파란 점 생김) */
         .radio-input:checked + .radio-label {
-            background: rgba(79, 172, 254, 0.1); 
-            border: 1px solid #4facfe; 
-            color: #fff; font-weight: bold;
+            background: rgba(79, 172, 254, 0.1); border: 1px solid #4facfe; color: #fff; font-weight: bold;
         }
         .radio-input:checked + .radio-label::before {
-            border: 6px solid #4facfe; /* 두꺼운 테두리로 점 모양을 만듦 */
-            background: #fff; /* 점의 가운데 색상 */
+            border: 6px solid #4facfe; background: #fff; 
         }
 
         /* 하단 버튼 디자인 */
@@ -100,7 +103,7 @@
         <div class="form-group">
             <label class="question-title" for="userGrade">1. 너를 조금 더 잘 이해하고 싶어. 학년이 어떻게 돼?</label>
             <select id="userGrade" required>
-                <option value="" disabled selected>선택해 줘</option>
+                <option value="" disabled selected>학년을 선택해줘.</option>
                 <option value="중학교 1학년">중학교 1학년</option>
                 <option value="중학교 2학년">중학교 2학년</option>
                 <option value="중학교 3학년">중학교 3학년</option>
@@ -224,10 +227,9 @@
 </div>
 
 <script>
-    // 👇👇 방금 구글 스크립트에서 복사한 '웹 앱 URL'을 아래에 붙여넣으세요! 👇👇
+    // 👇👇 구글 스크립트 웹 앱 URL 👇👇
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWbTmPJ8DaRr49-EsMftB-W_CTjJcTOgIXMCIs3Uby8KUdxMSQJEuYvATqILmk-jedtQ/exec";
 
-    // 구글 스프레드시트로 데이터를 몰래 쏘는 함수
     function sendTrackingData(stepName, extraData = {}) {
         const payload = {
             "현재_도달_단계": stepName,
@@ -235,7 +237,6 @@
             ...extraData
         };
 
-        // Formspree 대신 구글 시트 URL로 데이터를 보냅니다 (CORS 오류 방지용 text/plain 적용)
         fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -244,7 +245,8 @@
     }
 
     function goToStep2() {
-        const gradeNode = document.querySelector('input[name="userGrade"]:checked');
+        // 🔥 자바스크립트 오류 수정: 1번 문항(학년) 값을 getElementById 로 가져옵니다 🔥
+        const grade = document.getElementById('userGrade').value;
         const directionNode = document.querySelector('input[name="userDirection"]:checked');
         const timeTypeNode = document.querySelector('input[name="userTimeType"]:checked');
         const processResultNode = document.querySelector('input[name="userProcessResult"]:checked');
@@ -255,12 +257,12 @@
         const interest = document.getElementById('userInterest').value.trim();
         const problem = document.getElementById('userProblem').value.trim();
         
-        if (!gradeNode || !directionNode || !timeTypeNode || !processResultNode || !recordElementNode || !activityNode || !subject || !interest || !problem) {
+        // !grade 조건으로 드롭다운이 선택되었는지 검사합니다
+        if (!grade || !directionNode || !timeTypeNode || !processResultNode || !recordElementNode || !activityNode || !subject || !interest || !problem) {
             alert('모든 문항을 빠짐없이 선택하고 입력해야 정확한 분석이 가능해!');
             return;
         }
 
-        const grade = gradeNode.value;
         const direction = directionNode.value;
         const timeType = timeTypeNode.value;
         const processResult = processResultNode.value;
@@ -305,7 +307,8 @@
             return;
         }
 
-        const grade = document.querySelector('input[name="userGrade"]:checked').value;
+        // 🔥 최종 데이터 전송 시에도 getElementById 로 학년 값을 가져옵니다 🔥
+        const grade = document.getElementById('userGrade').value;
         const subject = document.getElementById('userSubject').value;
         const interest = document.getElementById('userInterest').value;
         const direction = document.querySelector('input[name="userDirection"]:checked').value;
