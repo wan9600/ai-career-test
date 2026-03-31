@@ -98,12 +98,17 @@
     <div id="step1" class="step active">
         
         <div class="form-group">
-            <label class="question-title">1. 너를 조금 더 잘 이해하고 싶어. 학년이 어떻게 돼?</label>
-            <div class="radio-group">
-                <div><input type="radio" name="userGrade" id="g1" value="중학교 1~3학년" class="radio-input"><label for="g1" class="radio-label">중학교 1~3학년</label></div>
-                <div><input type="radio" name="userGrade" id="g2" value="고등학교 1~3학년" class="radio-input"><label for="g2" class="radio-label">고등학교 1~3학년</label></div>
-                <div><input type="radio" name="userGrade" id="g3" value="기타 (알려주고 싶지 않음)" class="radio-input"><label for="g3" class="radio-label">기타 (알려주고 싶지 않음)</label></div>
-            </div>
+            <label class="question-title" for="userGrade">1. 너를 조금 더 잘 이해하고 싶어. 학년이 어떻게 돼?</label>
+            <select id="userGrade" required>
+                <option value="" disabled selected>선택해 줘</option>
+                <option value="중학교 1학년">중학교 1학년</option>
+                <option value="중학교 2학년">중학교 2학년</option>
+                <option value="중학교 3학년">중학교 3학년</option>
+                <option value="고등학교 1학년">고등학교 1학년</option>
+                <option value="고등학교 2학년">고등학교 2학년</option>
+                <option value="고등학교 3학년">고등학교 3학년</option>
+                <option value="기타 (알려주고 싶지 않음)">기타 (알려주고 싶지 않음)</option>
+            </select>
         </div>
 
         <div class="form-group">
