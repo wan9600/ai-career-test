@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧭 AI 진로 내비게이터</title>
+    <style>
+        /* 여기서부터 전체 디자인(CSS) 코드입니다 */
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background: linear-gradient(135deg, #1e1e2f 0%, #151522 100%);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            padding: 30px 20px;
+            box-sizing: border-box;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 26px;
+            margin-bottom: 10px;
+            color: #4facfe;
+        }
+        .header p {
+            font-size: 14px;
+            color: #b0b0b0;
+            line-height: 1.5;
+        }
+        .step {
+            display: none; 
+            animation: fadeIn 0.5s;
+        }
+        .step.active {
+            display: block; 
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .form-group {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .sub-label {
+            display: block;
+            font-size: 12px;
+            color: #a0a0a0;
+            margin-bottom: 12px;
+        }
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 14px;
+            box-sizing: border-box;
+            font-family: 'Pretendard', sans-serif;
+        }
+        textarea { resize: vertical; min-height: 100px; }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            background: #4facfe;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        .submit-btn:hover { background: #328dd6; }
+        .pay-btn {
+            background: #ffe812; 
+            color: #333;
+        }
+        .pay-btn:hover { background: #e5d00f; }
+        
+        .blur-box {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+        .blur-text {
+            filter: blur(6px);
+            user-select: none;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        .lock-icon {
+            font-size: 40px;
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        
+        .loader {
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid #4facfe;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🧭 AI 진로 내비게이터</h1>
+        <p>너의 진짜 관심사와 과목 성향을 분석해<br>가장 성공 확률이 높은 전공과 실전 미션을 찾아줄게!</p>
+    </div>
+
+    <div id="step1" class="step active">
+        <div class="form-group">
+            <label>1. 가장 좋아하거나 자신 있는 과목은 뭐야?</label>
+            <input type="text" id="userSubject" placeholder="예: 국어나 역사는 좋은데, 수학은 피하고 싶어" required>
+        </div>
+
+        <div class="form-group">
+            <label>2. 평소 시간 가는 줄 모르고 푹 빠져있는 관심사가 있다면?</label>
+            <input type="text" id="userInterest" placeholder="예: 옷 코디하기, 범죄 다큐멘터리 보기 등" required>
+        </div>
+
+        <div class="form-group">
+            <label>3. 진로나 전공을 고민할 때, 널 제일 가로막는 '안개(고민)'는 뭐야?</label>
+            <textarea id="userProblem" placeholder="예: 관심 있는 분야는 많은데 하나를 못 고르겠어..." required></textarea>
+        </div>
+
+        <button class="submit-btn" onclick="goToStep2()">AI 진로 및 프로젝트 매칭 시작</button>
+    </div>
+
+    <div id="step2" class="step" style="text-align: center;">
+        <div id="loadingSection">
+            <div class="loader"></div>
+            <p>입력한 학업 성향과 고민을 분석 중이야...<br><span style="font-size: 12px; color: #a0a0a0;">(약 3초 소요)</span></p>
+        </div>
+        
+        <div id="fakeDoorSection" style="display: none; text-align: left;">
+            <h2 style="color: #4facfe; text-align: center;">🚀 맞춤형 진로 분석 완료!</h2>
+            <p style="text-align: center; margin-bottom: 20px;">너의 성향에 가장 잘 맞는 추천 전공 3가지와<br><b>'실전 미니 프로젝트 미션'</b>을 생성했어!</p>
+            
+            <div class="blur-box">
+                <div class="lock-icon">🔒</div>
+                <div class="blur-text">
+                    <b>[AI 진로 매칭 리포트]</b><br>
+                    • 1순위 추천 전공: OOO 학과 (매칭률 96%)<br>
+                    • 추천 이유: 작성해주신 과목 선호도와 취미를 종합해볼 때...<br><br>
+                    <b>[적성 검증 1주차 챌린지 미션]</b><br>
+                    이 전공이 진짜 내 길이 맞을까? 내일 하루 30분만 투자해서 다음 미션을 수행해 보세요...
+                </div>
+            </div>
+            
+            <button class="submit-btn pay-btn" onclick="goToStep3()">💳 9,900원 결제하고 맞춤형 미션 열람하기</button>
+        </div>
+    </div>
+
+    <div id="step3" class="step">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="color: #ffe812;">🎉 결제 창 클릭 감사해요!</h2>
+            <p>사실 이 서비스는 <b>[현재 베타 테스트 기간]</b>이라 전면 무료야.</p>
+            <p style="font-size: 14px; color: #b0b0b0;">결제하려던 그 의지만으로도 충분해! 🥺</p>
+        </div>
+
+        <div class="form-group">
+            <label>맞춤형 리포트를 받아볼 곳을 남겨줘!</label>
+            <input type="text" id="userContact" placeholder="이메일 주소 또는 오픈카톡 링크" required>
+        </div>
+        
+        <button class="submit-btn" onclick="submitFinalData()">무료로 리포트 받기</button>
+    </div>
+
+</div>
+
+<script>
+    // 👇👇 반드시 아래 쌍따옴표 안에 Formspree에서 받은 URL을 넣어주세요! 👇👇
+    const FORMSPREE_URL = "https://formspree.io/f/mjgpweoz";
+
+    // 백그라운드에서 Formspree로 데이터를 쏘는 함수 (fetch API 활용)
+    function sendTrackingData(stepName, extraData = {}) {
+        const payload = {
+            "현재_도달_단계": stepName,
+            "전송_시간": new Date().toLocaleString(),
+            ...extraData
+        };
+
+        fetch(FORMSPREE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).catch(err => console.log('추적 실패:', err)); 
+    }
+
+    function goToStep2() {
+        const subject = document.getElementById('userSubject').value;
+        const interest = document.getElementById('userInterest').value;
+        const problem = document.getElementById('userProblem').value;
+        
+        if (!subject || !interest || !problem) {
+            alert('모든 항목을 입력해야 정확한 분석이 가능해!');
+            return;
+        }
+
+        // [데이터 수집 1] 매칭 시작 버튼 클릭 (결제창 이탈자 파악용)
+        sendTrackingData("1단계_매칭시작_클릭(결제전)", {
+            "과목_선호도": subject,
+            "주요_관심사": interest,
+            "현재_고민": problem
+        });
+
+        document.getElementById('step1').classList.remove('active');
+        document.getElementById('step2').classList.add('active');
+
+        setTimeout(() => {
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('fakeDoorSection').style.display = 'block';
+        }, 3000);
+    }
+
+    function goToStep3() {
+        const subject = document.getElementById('userSubject').value;
+        const interest = document.getElementById('userInterest').value;
+        const problem = document.getElementById('userProblem').value;
+
+        // [데이터 수집 2] 9,900원 결제 버튼 클릭 (WTP 지불의사 검증 성공!)
+        sendTrackingData("2단계_결제버튼_클릭(WTP확인됨)", {
+            "과목_선호도": subject,
+            "주요_관심사": interest,
+            "현재_고민": problem,
+            "결제_클릭_여부": "Yes(9,900원 결제 클릭)"
+        });
+
+        document.getElementById('step2').classList.remove('active');
+        document.getElementById('step3').classList.add('active');
+    }
+
+    function submitFinalData() {
+        const contact = document.getElementById('userContact').value;
+        if (!contact) {
+            alert('리포트를 받을 연락처를 입력해 줘!');
+            return;
+        }
+
+        const subject = document.getElementById('userSubject').value;
+        const interest = document.getElementById('userInterest').value;
+        const problem = document.getElementById('userProblem').value;
+
+        // [데이터 수집 3] 최종 연락처 제출 완료
+        sendTrackingData("3단계_최종완료(연락처제출)", {
+            "과목_선호도": subject,
+            "주요_관심사": interest,
+            "현재_고민": problem,
+            "연락처": contact
+        });
+
+        alert('접수 완료! 연구팀이 분석해서 보내줄게 🚀');
+        window.location.reload(); // 처음 화면으로 리셋
+    }
+</script>
+
+</body>
+</html>
